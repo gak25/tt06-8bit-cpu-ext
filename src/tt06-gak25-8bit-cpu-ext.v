@@ -13,6 +13,8 @@
 `define LDB 4'b0001            // Load Byte into Regsiter
 `define STB 4'b0010            // Store Byte from Regsiter
 `define RDS 4'b0011            // Read (store) processor status
+`define CLR 4'b1000  	       // Clear Register
+
 // 1'b0100 NOP
 // 1'b0101 NOP
 // 1'b0110 NOP
@@ -103,6 +105,19 @@ module  tt_um_gak25_8bit_cpu_ext (
 
     always @(*) begin
         case(inst)
+	    `CLR: begin
+	        mux_new_data_out = 0;
+	        mux_processor_stat_data_out = 0;
+	        mux_new_processor_stat = 0;
+	        r_reg1 = 4'bxxxx;       // No register read needed
+	        r_reg2 = 4'bxxxx;       // No register read needed
+	        w_reg = r1;             // Register to clear
+	        w_data = 8'b00000000;   // Data to write (zero)
+	        write = 1'b1;           // Enable writing to the register
+	        alu_in1 = 8'hxx;
+	        alu_in2 = 8'hxx;
+	        alu_op = 3'bxxx;
+	    end
             `MVR: begin
                 mux_new_data_out = 0;
                 mux_processor_stat_data_out = 0;
