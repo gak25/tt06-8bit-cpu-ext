@@ -8,7 +8,7 @@ You can also include images in this folder and reference them in the markdown. E
 -->
 
 ## How it works
-This project is the most minimal extension (add MUL to ISA) of Ramyad Hadidi's 8-bit CPU that details the design and implementation of an 8-bit single-cycle microprocessor. The processor includes a register file and an Arithmetic Logic Unit (ALU). The design was crafted to handle a simple instruction set architecture (ISA) that supports basic ALU operations, load/store operations, and status checks for the ALU carry -- all within less than a week. While the current version lacks a program counter and external memory, thus omitting any form of jump operations, it provides a solid foundation for understanding basic computational operations within a custom CPU architecture.
+This project is the most minimal extension (add CLR & MUL to ISA) of Ramyad Hadidi's 8-bit CPU that details the design and implementation of an 8-bit single-cycle microprocessor. The processor includes a register file and an Arithmetic Logic Unit (ALU). The design was crafted to handle a simple instruction set architecture (ISA) that supports basic ALU operations, load/store operations, and status checks for the ALU carry -- all within less than a week. While the current version lacks a program counter and external memory, thus omitting any form of jump operations, it provides a solid foundation for understanding basic computational operations within a custom CPU architecture.
 
 ### ISCA Overview
 The ISA is straightforward and is primarily focused on register operations and basic arithmetic/logic functions. Below is the breakdown of the instruction set:
