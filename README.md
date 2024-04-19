@@ -1,6 +1,6 @@
 ![](../../workflows/gds/badge.svg) ![](../../workflows/docs/badge.svg) ![](../../workflows/test/badge.svg)
 
-# Tiny Tapeout Verilog Project Template
+# tt06-8bit-cpu-ext (Minimal extension of Ramyad Hadidi's CPU) 
 
 - [Read the documentation for project](docs/info.md)
 
