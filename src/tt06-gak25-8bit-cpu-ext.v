@@ -353,6 +353,11 @@ module alu #(
 
     always @(*)
         case(op)
+	   `ALU_MUL:  begin
+                    temp_mul = in1 * in2; // Simple multiplication
+                    out = temp_mul[BIT_WIDTH_REG-1:0]; // Assign lower bits to output
+                    c = temp_mul[BIT_WIDTH_REG*2:BIT_WIDTH_REG] != 0; // Set carry if higher bits are non-zero
+                    end
             `ALU_NOT: begin
                     out = ~in1;
                     c = 1'b0;
@@ -387,12 +392,7 @@ module alu #(
                     out = in1 + 1;
                     c = in1[7] & ~out[7];
                     temp = {BIT_WIDTH_REG+1{1'bx}};
-	    	    end
-            `ALU_MUL: begin
-                    temp_mul = in1 * in2; // Simple multiplication
-                    out = temp_mul[BIT_WIDTH_REG-1:0]; // Assign lower bits to output
-                    c = temp_mul[BIT_WIDTH_REG*2:BIT_WIDTH_REG] != 0; // Set carry if higher bits are non-zero
-                    end
+	    end
             default: begin
                         out={BIT_WIDTH_REG{1'b0}};
                         c = 1'b0;
