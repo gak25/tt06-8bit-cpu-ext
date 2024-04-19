@@ -393,12 +393,11 @@ module alu #(
                     out = temp_mul[BIT_WIDTH_REG-1:0]; // Assign lower bits to output
                     c = temp_mul[BIT_WIDTH_REG*2:BIT_WIDTH_REG] != 0; // Set carry if higher bits are non-zero
                     end
-            end
             default: begin
                         out={BIT_WIDTH_REG{1'b0}};
                         c = 1'b0;
                         temp = {BIT_WIDTH_REG+1{1'bx}};
-                        end
+                    end
         endcase
 
 endmodule
