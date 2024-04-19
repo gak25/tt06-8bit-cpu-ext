@@ -6,8 +6,6 @@
 `define ALU_SUB  3'b100
 `define ALU_XOR  3'b101
 `define ALU_INC  3'b110
-`define ALU_MUL  3'b111 // Adding multiplication opcode
-
 
 // ISA --------------------------------------------------------------
 //-- R level
@@ -20,7 +18,7 @@
 // 1'b0110 NOP
 // 1'b0111 NOP
 
-//-- Arithmetics
+//-- Arithmatics
 `define NOT {1'b1, `ALU_NOT}
 `define AND {1'b1, `ALU_AND}
 `define ORA {1'b1, `ALU_ORA}
@@ -28,7 +26,6 @@
 `define SUB {1'b1, `ALU_SUB}
 `define XOR {1'b1, `ALU_XOR}
 `define INC {1'b1, `ALU_INC}
-`define MUL {1'b1, `ALU_MUL} // Define multiplication instruction
 // 1'b1111 NOP
 
 // --------------------------------------------------------------------
@@ -37,7 +34,7 @@
 
 `default_nettype none
 
-module tt_um_gak25_8bit_cpu_ext (
+module tt_um_8bit_cpu (
     input  wire [7:0] ui_in,    // Dedicated inputs
     output wire [7:0] uo_out,   // Dedicated outputs
     input  wire [7:0] uio_in,   // IOs: Input path
@@ -249,14 +246,6 @@ module tt_um_gak25_8bit_cpu_ext (
                 alu_in2 = 8'hxx;
                 alu_op = `ALU_INC;
             end
-	    `MUL: begin
-	        alu_in1 = r_d1;
-	        alu_in2 = r_d2;
-	        alu_op = `ALU_MUL;
-	        w_reg = r1; // destination register
-	        w_data = alu_out;
-	        write = 1'b1;
-	    end
             default: begin
                 mux_new_data_out = 0;
                 mux_processor_stat_data_out = 0;
@@ -348,16 +337,9 @@ module alu #(
 );
 
     reg [BIT_WIDTH_REG:0] temp;
-    reg [BIT_WIDTH_REG*2:0] temp_mul; // Temporary register for multiplication results
-
 
     always @(*)
         case(op)
-	   `ALU_MUL:  begin
-                    temp_mul = in1 * in2; // Simple multiplication
-                    out = temp_mul[BIT_WIDTH_REG-1:0]; // Assign lower bits to output
-                    c = temp_mul[BIT_WIDTH_REG*2:BIT_WIDTH_REG] != 0; // Set carry if higher bits are non-zero
-                    end
             `ALU_NOT: begin
                     out = ~in1;
                     c = 1'b0;
@@ -392,12 +374,12 @@ module alu #(
                     out = in1 + 1;
                     c = in1[7] & ~out[7];
                     temp = {BIT_WIDTH_REG+1{1'bx}};
-	    end
+            end
             default: begin
                         out={BIT_WIDTH_REG{1'b0}};
                         c = 1'b0;
                         temp = {BIT_WIDTH_REG+1{1'bx}};
-                    end
+                        end
         endcase
 
 endmodule
