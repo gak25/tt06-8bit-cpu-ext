@@ -387,6 +387,7 @@ module alu #(
                     out = in1 + 1;
                     c = in1[7] & ~out[7];
                     temp = {BIT_WIDTH_REG+1{1'bx}};
+	    	    end
             `ALU_MUL: begin
                     temp_mul = in1 * in2; // Simple multiplication
                     out = temp_mul[BIT_WIDTH_REG-1:0]; // Assign lower bits to output
