@@ -15,7 +15,6 @@ project:
   
   # List your project's source files here. Source files must be in ./src and you must list each source file separately, one per line:
   source_files:        
-    - "project.v"
     - "tt06-gak25-8bit-cpu-ext.v"
 
 # The pinout of your project. Leave unused pins blank. DO NOT delete or add any pins.
