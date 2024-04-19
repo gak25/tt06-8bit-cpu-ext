@@ -6,8 +6,7 @@
 `define ALU_SUB  3'b100
 `define ALU_XOR  3'b101
 `define ALU_INC  3'b110
-`define ALU_MUL 3'b111 // Adding multiplication opcode
-`define ALU_DIV 3'b110 // Adding division opcode (redefining existing increment if unused)
+`define ALU_MUL  3'b111 // Adding multiplication opcode
 
 
 // ISA --------------------------------------------------------------
@@ -30,7 +29,6 @@
 `define XOR {1'b1, `ALU_XOR}
 `define INC {1'b1, `ALU_INC}
 `define MUL {1'b1, `ALU_MUL} // Define multiplication instruction
-`define DIV {1'b1, `ALU_DIV} // Define division instruction
 // 1'b1111 NOP
 
 // --------------------------------------------------------------------
@@ -259,14 +257,6 @@ module tt_um_gak25_8bit_cpu_ext (
 	        w_data = alu_out;
 	        write = 1'b1;
 	    end
-            `DIV: begin
-                alu_in1 = r_d1;
-                alu_in2 = r_d2;
-              	alu_op = `ALU_DIV;
-           	w_reg = r1; // destination register
-            	w_data = alu_out;
-            	write = 1'b1;
-       	    end
             default: begin
                 mux_new_data_out = 0;
                 mux_processor_stat_data_out = 0;
@@ -402,14 +392,6 @@ module alu #(
                     out = temp_mul[BIT_WIDTH_REG-1:0]; // Assign lower bits to output
                     c = temp_mul[BIT_WIDTH_REG*2:BIT_WIDTH_REG] != 0; // Set carry if higher bits are non-zero
                     end
-            `ALU_DIV: begin
-                    if (in2 != 0) begin
-                	out = in1 / in2; // Division result
-                      	c = in1 % in2 != 0; // Set carry if there is a remainder
-                    end else begin
-                    	out = 0; // Division by zero case
-                    	c = 1'b1; // Set carry to indicate error
-                	end
             end
             default: begin
                         out={BIT_WIDTH_REG{1'b0}};
