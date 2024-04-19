@@ -6,6 +6,8 @@
 `define ALU_SUB  3'b100
 `define ALU_XOR  3'b101
 `define ALU_INC  3'b110
+`define ALU_MUL  3'b111  // Adding a new opcode for multiplication in the ALU
+
 
 // ISA --------------------------------------------------------------
 //-- R level
@@ -20,7 +22,7 @@
 // 1'b0110 NOP
 // 1'b0111 NOP
 
-//-- Arithmatics
+//-- Arithmetics
 `define NOT {1'b1, `ALU_NOT}
 `define AND {1'b1, `ALU_AND}
 `define ORA {1'b1, `ALU_ORA}
@@ -28,6 +30,8 @@
 `define SUB {1'b1, `ALU_SUB}
 `define XOR {1'b1, `ALU_XOR}
 `define INC {1'b1, `ALU_INC}
+`define MUL {1'b1, `ALU_MUL}  // Define the multiplication instruction
+
 // 1'b1111 NOP
 
 // --------------------------------------------------------------------
@@ -105,6 +109,19 @@ module  tt_um_gak25_8bit_cpu_ext (
 
     always @(*) begin
         case(inst)
+	    `MUL: begin
+	        // Setup for multiplication instruction
+	        mux_new_data_out = 0;
+	        mux_processor_stat_data_out = 0;
+	        mux_new_processor_stat = 1;
+	        r_reg1 = r1;   // Register containing the first operand
+	        r_reg2 = r2;   // Register containing the second operand
+	        w_reg = r3;    // Register where the result will be written
+	        write = 1'b1;
+	        alu_in1 = r_d1;
+	        alu_in2 = r_d2;
+	        alu_op = `ALU_MUL;
+	    end
 	    `CLR: begin
 	        mux_new_data_out = 0;
 	        mux_processor_stat_data_out = 0;
@@ -352,6 +369,8 @@ module alu #(
 );
 
     reg [BIT_WIDTH_REG:0] temp;
+    reg [2*BIT_WIDTH_REG-1:0] mul_temp;  // Temporary register to hold multiplication result
+
 
     always @(*)
         case(op)
@@ -389,6 +408,11 @@ module alu #(
                     out = in1 + 1;
                     c = in1[7] & ~out[7];
                     temp = {BIT_WIDTH_REG+1{1'bx}};
+            end
+            `ALU_MUL: begin
+                mul_temp = in1 * in2;  // Perform multiplication
+                out = mul_temp[BIT_WIDTH_REG-1:0];  // Truncate to lower 8 bits
+                c = |mul_temp[2*BIT_WIDTH_REG-1:BIT_WIDTH_REG];  // Set carry if upper bits are non-zero
             end
             default: begin
                         out={BIT_WIDTH_REG{1'b0}};
